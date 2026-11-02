@@ -26,7 +26,7 @@ A web-based pharmacy management application proposed to streamline medicine sale
 | Component | Technology / Tool | Purpose |
 |---|---|---|
 | Backend | Core PHP 8.2+ / 8.3 | Request handling, sessions, business logic, and security |
-| Database | MySQL / MariaDB using PDO | Relational data storage, queries, indexing, and data integrity |
+| Database | MySQL / MariaDB | Relational data storage, queries, indexing, and data integrity |
 | Frontend | HTML5, CSS3, JavaScript, Bootstrap | Responsive UI, dynamic forms, and modal dialogs |
 | Local environment | XAMPP | Apache web server and MariaDB database environment |
 | Code editor | Notepad++ or Visual Studio Code | Writing and managing project files |
