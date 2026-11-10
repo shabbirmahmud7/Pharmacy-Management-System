@@ -1,34 +1,52 @@
 <?php
-// Admin Login Page
 session_start();
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Admin Login - Pharmacy Management</title>
-    <?php include '../includes/admin_css.php'; ?>
-</head>
-<body class="bg-dark d-flex align-items-center justify-content-center min-vh-100">
+include '../config/db_connect.php';
 
-<div class="card shadow-lg p-4" style="width: 400px; border-radius: 10px;">
-    <div class="text-center mb-3">
-        <i class="fa-solid fa-prescription-bottle-medical fa-3x text-primary"></i>
-        <h4 class="mt-2 fw-bold">Admin Portal</h4>
-        <p class="text-muted small">Pharmacy Sales & Inventory</p>
+$error_msg = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+
+    $sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows == 1) {
+        $row = $result->fetch_assoc();
+        $_SESSION['user_id'] = $row['id'];
+        $_SESSION['name'] = $row['name'];
+        $_SESSION['role'] = $row['type']; // 1 = Admin, 2 = Cashier
+
+        header("Location: dashboard.php");
+        exit();
+    } else {
+        $error_msg = "Invalid Username or Password!";
+    }
+}
+?>
+
+<?php include '../includes/header.php'; ?>
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow p-4" style="width: 380px;">
+        <h3 class="text-center mb-3">Admin Login</h3>
+        
+        <?php if (!empty($error_msg)): ?>
+            <div class="alert alert-danger py-2"><?php echo $error_msg; ?></div>
+        <?php endif; ?>
+
+        <form method="POST" action="">
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
     </div>
-    <form action="dashboard.php" method="POST">
-        <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" name="username" class="form-control" id="username" placeholder="Enter username" required>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" name="password" class="form-control" id="password" placeholder="Enter password" required>
-        </div>
-        <button type="submit" class="btn btn-primary w-100 mt-2">Login</button>
-    </form>
 </div>
 
-<?php include '../includes/admin_script.php'; ?>
-</body>
-</html>
+<?php include '../includes/footer.php'; ?>

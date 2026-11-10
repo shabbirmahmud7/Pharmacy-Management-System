@@ -7,4 +7,19 @@ body {
 .sidebar .nav-link:hover {
     background-color: #495057;
     border-radius: 5px;
+} 
+
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar-box {
+    width: 250px;
+    min-height: 100vh;
+}
+
+.sidebar-box .nav-link:hover {
+    background-color: #495057;
+    border-radius: 4px;
 }

@@ -22,10 +22,10 @@
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a href="#" class="nav-link text-white-50">
-                <i class="fa-solid fa-boxes-stacked me-2"></i> Medicine List
-            </a>
-        </li>
+    <a href="medicines.php" class="nav-link text-white-50">
+        <i class="fa-solid fa-boxes-stacked me-2"></i> Medicine List
+    </a>
+</li>
         <li class="nav-item mb-2">
             <a href="#" class="nav-link text-white-50">
                 <i class="fa-solid fa-list me-2"></i> Categories

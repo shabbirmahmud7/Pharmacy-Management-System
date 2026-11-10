@@ -1,20 +1,21 @@
 <?php
-// Admin Dashboard Control Panel
+session_start();
+
+// Session security check: Keu login na kore dhukte parbe na
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Dashboard - Pharmacy Management</title>
-    <?php include '../includes/admin_css.php'; ?>
-</head>
-<body>
+
+<?php include '../includes/header.php'; ?>
 
 <div class="d-flex">
     <!-- Sidebar Included -->
     <?php include '../includes/sidebar.php'; ?>
 
     <!-- Main Content Area -->
-    <div class="w-100 bg-light">
+    <div class="w-100 bg-light min-vh-100">
         <!-- Topbar Included -->
         <?php include '../includes/topbar.php'; ?>
 
@@ -57,12 +58,13 @@
                 </div>
             </div>
 
+            <!-- Welcome & Quick Activity Card -->
             <div class="card mt-4 shadow-sm">
                 <div class="card-header bg-white fw-bold">
                     System Quick Activity
                 </div>
                 <div class="card-body">
-                    <p class="card-text">Welcome to the Pharmacy Sales and Inventory System administration page.</p>
+                    <p class="card-text">Welcome back, <strong><?php echo htmlspecialchars($_SESSION['name']); ?></strong>! You are successfully logged into the Pharmacy Sales and Inventory Management System.</p>
                 </div>
             </div>
 
@@ -70,6 +72,4 @@
     </div>
 </div>
 
-<?php include '../includes/admin_script.php'; ?>
-</body>
-</html>
+<?php include '../includes/footer.php'; ?>
