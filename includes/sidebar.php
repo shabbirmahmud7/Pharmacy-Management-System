@@ -1,6 +1,7 @@
 <?php
 // Sidebar Navigation Bar
 ?>
+
 <div class="bg-dark text-white p-3 min-vh-100 sidebar" style="width: 250px;">
     <h4 class="text-center py-2 border-bottom border-secondary">
         <i class="fa-solid fa-prescription-bottle-medical text-primary me-2"></i>Pharmacy
@@ -27,12 +28,12 @@
     </a>
 </li>
         <li class="nav-item mb-2">
-            <a href="#" class="nav-link text-white-50">
+            <a href="categories.php" class="nav-link text-white-50">
                 <i class="fa-solid fa-list me-2"></i> Categories
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a href="#" class="nav-link text-white-50">
+            <a href="medicine_types.php" class="nav-link text-white-50">
                 <i class="fa-solid fa-capsules me-2"></i> Medicine Types
             </a>
         </li>
@@ -42,7 +43,7 @@
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a href="#" class="nav-link text-white-50">
+            <a href="suppliers.php" class="nav-link text-white-50">
                 <i class="fa-solid fa-truck-field me-2"></i> Suppliers
             </a>
         </li>
