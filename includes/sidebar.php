@@ -18,7 +18,7 @@
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a href="#" class="nav-link text-white-50">
+            <a href="receivings.php" class="nav-link text-white-50">
                 <i class="fa-solid fa-truck-ramp-box me-2"></i> Receivings
             </a>
         </li>
@@ -38,7 +38,7 @@
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a href="#" class="nav-link text-white-50">
+            <a href="expired_list.php" class="nav-link text-white-50">
                 <i class="fa-solid fa-calendar-xmark me-2"></i> Expired List
             </a>
         </li>
@@ -48,7 +48,7 @@
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a href="#" class="nav-link text-white-50">
+            <a href="customers.php" class="nav-link text-white-50">
                 <i class="fa-solid fa-users me-2"></i> Customers
             </a>
         </li>

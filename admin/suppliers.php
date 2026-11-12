@@ -10,7 +10,7 @@ include '../config/db_connect.php';
 $error = "";
 $success = "";
 
-// Add Supplier Logic
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_supplier'])) {
     $supplier_name = trim($_POST['supplier_name']);
     $contact_person = trim($_POST['contact_person']);
@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_supplier'])) {
     }
 }
 
-// Fetch Suppliers
+
 $result = $conn->query("SELECT * FROM supplier_list ORDER BY id DESC");
 ?>
 
@@ -87,7 +87,7 @@ $result = $conn->query("SELECT * FROM supplier_list ORDER BY id DESC");
                     </div>
                 </div>
 
-                <!-- Supplier Table List -->
+            
                 <div class="col-md-8">
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-white fw-bold">Supplier List</div>
@@ -105,25 +105,25 @@ $result = $conn->query("SELECT * FROM supplier_list ORDER BY id DESC");
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if ($result->num_rows > 0): ?>
-                                            <?php $i = 1; while ($row = $result->fetch_assoc()): ?>
-                                                <tr>
-                                                    <td><?php echo $i++; ?></td>
-                                                    <td><?php echo htmlspecialchars($row['supplier_name']); ?></td>
-                                                    <td><?php echo htmlspecialchars($row['contact_person'] ?? ''); ?></td>
-                                                    <td><?php echo htmlspecialchars($row['phone']); ?></td>
-                                                    <td><?php echo htmlspecialchars($row['address'] ?? ''); ?></td>
-                                                    <td>
-                                                        <a href="delete_supplier.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this supplier?');"><i class="fa-solid fa-trash"></i></a>
-                                                    </td>
-                                                </tr>
-                                            <?php endwhile; ?>
-                                        <?php else: ?>
-                                            <tr>
-                                                <td colspan="6" class="text-center text-muted py-4">No suppliers found.</td>
-                                            </tr>
-                                        <?php endif; ?>
-                                    </tbody>
+    <?php if ($result->num_rows > 0): ?>
+        <?php $i = 1; while ($row = $result->fetch_assoc()): ?>
+            <tr>
+                <td><?php echo $i++; ?></td>
+                <td><?php echo htmlspecialchars($row['supplier_name'] ?? ''); ?></td>
+                <td><?php echo htmlspecialchars($row['contact_person'] ?? ''); ?></td>
+                <td><?php echo htmlspecialchars($row['phone'] ?? $row['contact'] ?? ''); ?></td>
+                <td><?php echo htmlspecialchars($row['address'] ?? ''); ?></td>
+                <td>
+                    <a href="delete_supplier.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this supplier?');"><i class="fa-solid fa-trash"></i></a>
+                </td>
+            </tr>
+        <?php endwhile; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="6" class="text-center text-muted py-4">No suppliers found.</td>
+        </tr>
+    <?php endif; ?>
+</tbody>
                                 </table>
                             </div>
                         </div>
