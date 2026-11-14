@@ -13,7 +13,7 @@
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a href="#" class="nav-link text-white-50">
+            <a href="pos.php" class="nav-link text-white-50">
                 <i class="fa-solid fa-cart-shopping me-2"></i> Sales (POS)
             </a>
         </li>
@@ -53,7 +53,7 @@
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a href="#" class="nav-link text-white-50">
+            <a href="" class="nav-link text-white-50">
                 <i class="fa-solid fa-user-gear me-2"></i> User Management
             </a>
         </li>
