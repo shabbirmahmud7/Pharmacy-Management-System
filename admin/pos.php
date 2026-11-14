@@ -73,9 +73,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['checkout'])) {
         $change = $tendered - $grand_total;
 
         // Insert into sales_list
-        $sql_sale = "INSERT INTO sales_list (customer_id, total_amount, amount_tendered, amount_change, date_created) 
-                     VALUES ('$customer_id', '$grand_total', '$tendered', '$change', NOW())";
-        
+      // Generate a unique reference number
+        $ref_no = 'REF-' . rand(100000, 999999);
+
+        // Insert into sales_list with ref_no
+        $sql_sale = "INSERT INTO sales_list (ref_no, customer_id, total_amount, amount_tendered, amount_change, date_created) 
+                     VALUES ('$ref_no', '$customer_id', '$grand_total', '$tendered', '$change', NOW())";
         if ($conn->query($sql_sale) === TRUE) {
             $sale_id = $conn->insert_id;
 
