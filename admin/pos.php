@@ -32,7 +32,7 @@ if (isset($_POST['add_to_cart'])) {
                 $_SESSION['pos_cart'][$product_id] = [
                     'id' => $prod['id'],
                     'name' => $prod['name'],
-                    'price' => $prod['price'] ?? 0, // Ensure price column exists
+                    'price' => $prod['price'] ?? 0,
                     'qty' => $qty,
                     'stock' => $prod['quantity']
                 ];
@@ -72,13 +72,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['checkout'])) {
     if ($grand_total > 0 && $tendered >= $grand_total) {
         $change = $tendered - $grand_total;
 
-        // Insert into sales_list
-      // Generate a unique reference number
+        // Generate a unique reference number
         $ref_no = 'REF-' . rand(100000, 999999);
 
         // Insert into sales_list with ref_no
         $sql_sale = "INSERT INTO sales_list (ref_no, customer_id, total_amount, amount_tendered, amount_change, date_created) 
                      VALUES ('$ref_no', '$customer_id', '$grand_total', '$tendered', '$change', NOW())";
+        
         if ($conn->query($sql_sale) === TRUE) {
             $sale_id = $conn->insert_id;
 
@@ -92,8 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['checkout'])) {
                 $conn->query("INSERT INTO sale_items (sale_id, product_id, price, qty, total) VALUES ('$sale_id', '$p_id', '$p_price', '$p_qty', '$p_total')");
 
                 // Reduce inventory stock
-                $conn->query("UPDATE product_list SET quantity = quantity - $p_qty WHERE id = $p_id");
-            }
+               // Reduce inventory stock in POS checkout
+        $conn->query("UPDATE product_list SET quantity = quantity - $p_qty WHERE id = $p_id");  }
 
             // Clear cart after successful checkout
             $_SESSION['pos_cart'] = [];
@@ -106,9 +106,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['checkout'])) {
     }
 }
 
-// Fetch Customers & Medicines for dropdowns
+// Fetch Total Medicines Count in Database
+$total_med_res = $conn->query("SELECT COUNT(*) as total FROM product_list");
+$total_med_row = $total_med_res->fetch_assoc();
+$total_medicines = $total_med_row['total'] ?? 0;
+
+// Fetch Customers & All Medicines for dropdowns
 $customers = $conn->query("SELECT * FROM customer_list ORDER BY name ASC");
-$medicines = $conn->query("SELECT * FROM product_list WHERE quantity > 0 ORDER BY name ASC");
+$medicines = $conn->query("SELECT * FROM product_list ORDER BY name ASC");
 ?>
 
 <?php include '../includes/header.php'; ?>
@@ -133,7 +138,10 @@ $medicines = $conn->query("SELECT * FROM product_list WHERE quantity > 0 ORDER B
                 <!-- Left Column: Add Product & Product List -->
                 <div class="col-md-5 mb-4">
                     <div class="card shadow-sm border-0 mb-4">
-                        <div class="card-header bg-primary text-white fw-bold">Add Medicine to Cart</div>
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">Add Medicine to Cart</span>
+                            <span class="badge bg-light text-primary">Total Medicines: <?php echo $total_medicines; ?></span>
+                        </div>
                         <div class="card-body">
                             <form method="POST" action="">
                                 <div class="mb-3">
@@ -141,13 +149,19 @@ $medicines = $conn->query("SELECT * FROM product_list WHERE quantity > 0 ORDER B
                                     <select name="product_id" class="form-control" required>
                                         <option value="">-- Choose Medicine --</option>
                                         <?php if ($medicines && $medicines->num_rows > 0): ?>
-                                            <?php while ($med = $medicines->fetch_assoc()): ?>
-                                                <option value="<?php echo $med['id']; ?>">
-                                                    <?php echo htmlspecialchars($med['name']); ?> (Stock: <?php echo $med['quantity']; ?> | Price: ৳<?php echo $med['price'] ?? 0; ?>)
+                                            <?php while ($med = $medicines->fetch_assoc()): 
+                                                $stock = intval($med['quantity'] ?? 0);
+                                                $is_out_of_stock = ($stock <= 0);
+                                            ?>
+                                                <option value="<?php echo $med['id']; ?>" <?php echo $is_out_of_stock ? 'disabled' : ''; ?>>
+                                                    <?php echo htmlspecialchars($med['name']); ?> 
+                                                    (Stock: <?php echo $stock; ?> | Price: ৳<?php echo $med['price'] ?? 0; ?>)
+                                                    <?php echo $is_out_of_stock ? ' [Out of Stock]' : ''; ?>
                                                 </option>
                                             <?php endwhile; ?>
                                         <?php endif; ?>
                                     </select>
+                                    <div class="form-text text-muted">Out of stock items cannot be selected.</div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Quantity</label>
