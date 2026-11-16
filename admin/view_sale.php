@@ -9,7 +9,6 @@ include '../config/db_connect.php';
 
 $sale_id = intval($_GET['id'] ?? 0);
 
-// Fetch Sale details with customer info
 $sale_res = $conn->query("SELECT s.*, c.name as customer_name, c.phone as customer_phone, c.address as customer_address 
                           FROM sales_list s 
                           LEFT JOIN customer_list c ON s.customer_id = c.id 
@@ -22,7 +21,6 @@ if (!$sale_res || $sale_res->num_rows == 0) {
 
 $sale = $sale_res->fetch_assoc();
 
-// Fetch Sale Items (Medicines purchased)
 $items_res = $conn->query("SELECT si.*, p.name as product_name, p.sku 
                            FROM sale_items si 
                            LEFT JOIN product_list p ON si.product_id = p.id 
@@ -49,7 +47,7 @@ $items_res = $conn->query("SELECT si.*, p.name as product_name, p.sku
             <div class="row">
                 <div class="col-md-8 mx-auto">
                     <div class="card shadow-sm border-0 p-4">
-                        <!-- Invoice Header -->
+                       
                         <div class="text-center mb-4">
                             <h2 class="fw-bold text-primary">PHARMACY MANAGEMENT SYSTEM</h2>
                             <p class="text-muted mb-1">Official Sales Receipt / Invoice</p>
@@ -58,7 +56,6 @@ $items_res = $conn->query("SELECT si.*, p.name as product_name, p.sku
 
                         <hr>
 
-                        <!-- Customer & Invoice Info -->
                         <div class="row mb-4">
                             <div class="col-sm-6">
                                 <h6 class="fw-bold text-dark">Customer Details:</h6>
@@ -73,7 +70,7 @@ $items_res = $conn->query("SELECT si.*, p.name as product_name, p.sku
                             </div>
                         </div>
 
-                        <!-- Purchased Items Table -->
+                   
                         <div class="table-responsive mb-4">
                             <table class="table table-bordered align-middle">
                                 <thead class="table-light">
@@ -104,7 +101,7 @@ $items_res = $conn->query("SELECT si.*, p.name as product_name, p.sku
                             </table>
                         </div>
 
-                        <!-- Bill Calculation Summary -->
+                    
                         <div class="row">
                             <div class="col-md-6 offset-md-6">
                                 <table class="table table-sm table-borderless">

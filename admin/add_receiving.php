@@ -10,13 +10,10 @@ include '../config/db_connect.php';
 $error = "";
 $success = "";
 
-// Fetch Suppliers for Dropdown
 $suppliers = $conn->query("SELECT * FROM supplier_list ORDER BY supplier_name ASC");
 
-// Fetch Medicines for Dropdown
 $medicines = $conn->query("SELECT * FROM product_list ORDER BY name ASC");
 
-// Handle Form Submission
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_receiving'])) {
     $supplier_id = $_POST['supplier_id'];
     $product_id = $_POST['product_id'];

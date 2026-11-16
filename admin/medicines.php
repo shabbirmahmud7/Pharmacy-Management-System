@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
 
 include '../config/db_connect.php';
 
-// Fetch all medicines from product_list table
+
 $sql = "SELECT p.*, c.name as category_name, s.supplier_name 
         FROM product_list p 
         LEFT JOIN category_list c ON p.category_id = c.id 

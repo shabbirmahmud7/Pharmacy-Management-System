@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
 
 include '../config/db_connect.php';
 
-// Fetch Receivings / Stock Purchases with Supplier details
+
 $sql = "SELECT r.*, s.supplier_name 
         FROM receiving_list r 
         LEFT JOIN supplier_list s ON r.supplier_id = s.id 

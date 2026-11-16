@@ -53,7 +53,7 @@ $result = $conn->query("SELECT * FROM customer_list ORDER BY id DESC");
             <?php endif; ?>
 
             <div class="row">
-                <!-- Add Customer Form -->
+            
                 <div class="col-md-4 mb-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-white fw-bold">Add New Customer</div>
@@ -81,7 +81,6 @@ $result = $conn->query("SELECT * FROM customer_list ORDER BY id DESC");
                     </div>
                 </div>
 
-                <!-- Customer Table List -->
                 <div class="col-md-8">
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-white fw-bold">Customer List</div>

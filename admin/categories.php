@@ -10,7 +10,7 @@ include '../config/db_connect.php';
 $error = "";
 $success = "";
 
-// Add Category Logic
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_category'])) {
     $name = trim($_POST['name']);
     $description = trim($_POST['description']);
@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_category'])) {
     }
 }
 
-// Fetch Categories
+
 $result = $conn->query("SELECT * FROM category_list ORDER BY id DESC");
 ?>
 
@@ -50,7 +50,7 @@ $result = $conn->query("SELECT * FROM category_list ORDER BY id DESC");
             <?php endif; ?>
 
             <div class="row">
-                <!-- Add Category Form -->
+             
                 <div class="col-md-4 mb-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-white fw-bold">Add New Category</div>
@@ -70,7 +70,6 @@ $result = $conn->query("SELECT * FROM category_list ORDER BY id DESC");
                     </div>
                 </div>
 
-                <!-- Categories Table List -->
                 <div class="col-md-8">
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-white fw-bold">Category List</div>

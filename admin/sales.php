@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
 
 include '../config/db_connect.php';
 
-// Fetch all sales with customer information
+
 $sql = "SELECT s.*, c.name as customer_name, c.phone as customer_phone 
         FROM sales_list s 
         LEFT JOIN customer_list c ON s.customer_id = c.id 

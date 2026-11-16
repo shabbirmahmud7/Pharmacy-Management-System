@@ -15,7 +15,7 @@ if (!isset($_SESSION['pos_cart'])) {
 $success = "";
 $error = "";
 
-// 1. Add to Cart Logic
+
 if (isset($_POST['add_to_cart'])) {
     $product_id = intval($_POST['product_id']);
     $qty = intval($_POST['qty']);
@@ -43,7 +43,6 @@ if (isset($_POST['add_to_cart'])) {
     }
 }
 
-// 2. Remove Item from Cart
 if (isset($_GET['remove'])) {
     $remove_id = intval($_GET['remove']);
     unset($_SESSION['pos_cart'][$remove_id]);
@@ -51,19 +50,19 @@ if (isset($_GET['remove'])) {
     exit();
 }
 
-// 3. Clear Cart
+
 if (isset($_GET['clear'])) {
     $_SESSION['pos_cart'] = [];
     header("Location: pos.php");
     exit();
 }
 
-// 4. Checkout / Complete Sale Logic
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['checkout'])) {
     $customer_id = intval($_POST['customer_id']);
     $tendered = floatval($_POST['tendered']);
     
-    // Calculate total amount
+
     $grand_total = 0;
     foreach ($_SESSION['pos_cart'] as $item) {
         $grand_total += ($item['price'] * $item['qty']);
@@ -72,17 +71,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['checkout'])) {
     if ($grand_total > 0 && $tendered >= $grand_total) {
         $change = $tendered - $grand_total;
 
-        // Generate a unique reference number
+
         $ref_no = 'REF-' . rand(100000, 999999);
 
-        // Insert into sales_list with ref_no
         $sql_sale = "INSERT INTO sales_list (ref_no, customer_id, total_amount, amount_tendered, amount_change, date_created) 
                      VALUES ('$ref_no', '$customer_id', '$grand_total', '$tendered', '$change', NOW())";
         
         if ($conn->query($sql_sale) === TRUE) {
             $sale_id = $conn->insert_id;
 
-            // Insert sale items & update product stock
+
             foreach ($_SESSION['pos_cart'] as $item) {
                 $p_id = $item['id'];
                 $p_price = $item['price'];
@@ -95,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['checkout'])) {
                // Reduce inventory stock in POS checkout
         $conn->query("UPDATE product_list SET quantity = quantity - $p_qty WHERE id = $p_id");  }
 
-            // Clear cart after successful checkout
+
             $_SESSION['pos_cart'] = [];
             $success = "Checkout successful! Sale ID: #" . $sale_id;
         } else {
@@ -106,12 +104,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['checkout'])) {
     }
 }
 
-// Fetch Total Medicines Count in Database
+
 $total_med_res = $conn->query("SELECT COUNT(*) as total FROM product_list");
 $total_med_row = $total_med_res->fetch_assoc();
 $total_medicines = $total_med_row['total'] ?? 0;
 
-// Fetch Customers & All Medicines for dropdowns
 $customers = $conn->query("SELECT * FROM customer_list ORDER BY name ASC");
 $medicines = $conn->query("SELECT * FROM product_list ORDER BY name ASC");
 ?>
@@ -173,7 +170,7 @@ $medicines = $conn->query("SELECT * FROM product_list ORDER BY name ASC");
                     </div>
                 </div>
 
-                <!-- Right Column: Cart & Checkout Summary -->
+     
                 <div class="col-md-7">
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
@@ -223,7 +220,7 @@ $medicines = $conn->query("SELECT * FROM product_list ORDER BY name ASC");
                                 </table>
                             </div>
 
-                            <!-- Checkout Form -->
+                       
                             <form method="POST" action="">
                                 <div class="mb-3">
                                     <label class="form-label">Select Customer</label>
