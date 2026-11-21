@@ -23,16 +23,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_receiving'])) {
 
     if ($supplier_id > 0 && !empty($product_ids)) {
         $total_amount = 0;
-        
-        // Calculate total amount first
+        $total_items = 0;
+
+        // Calculate total amount and total items first
         for ($i = 0; $i < count($product_ids); $i++) {
-            $q = floatval($qtys[$i]);
+            $q = intval($qtys[$i]);
             $p = floatval($prices[$i]);
-            $total_amount += ($q * $p);
+            if ($q > 0) {
+                $total_items += $q;
+                $total_amount += ($q * $p);
+            }
         }
 
-        // Insert into receiving_list
-        $sql_rec = "INSERT INTO receiving_list (supplier_id, total_amount) VALUES ($supplier_id, $total_amount)";
+        // Insert into receiving_list including total_items
+        $sql_rec = "INSERT INTO receiving_list (supplier_id, total_items, total_amount) VALUES ($supplier_id, $total_items, $total_amount)";
         if ($conn->query($sql_rec) === TRUE) {
             $receiving_id = $conn->insert_id;
 
@@ -96,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_receiving'])) {
                                     <option value="">-- Choose Supplier --</option>
                                     <?php if ($suppliers && $suppliers->num_rows > 0): ?>
                                         <?php while ($sup = $suppliers->fetch_assoc()): ?>
-                                            <option value="<?php echo $sup['id']; ?>"><?php echo htmlspecialchars($sup['name']); ?></option>
+                                            <option value="<?php echo $sup['id']; ?>"><?php echo htmlspecialchars($sup['supplier_name']); ?></option>
                                         <?php endwhile; ?>
                                     <?php endif; ?>
                                 </select>
@@ -124,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_receiving'])) {
                                 <tr>
                                     <td>
                                         <select name="product_id[]" class="form-control" required>
-                                            <option value="<?php echo $sup['id']; ?>"><?php echo htmlspecialchars($sup['supplier_name']); ?></option>
+                                            <option value="">-- Select Medicine --</option>
                                             <?php 
                                             // Reset pointer for medicines
                                             if ($medicines) { $medicines->data_seek(0); }
