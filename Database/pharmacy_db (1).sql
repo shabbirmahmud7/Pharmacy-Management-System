@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 21, 2026 at 02:11 AM
+-- Generation Time: Nov 22, 2026 at 06:02 AM
 -- Server version: 8.4.3
--- PHP Version: 8.3.36
+-- PHP Version: 8.3.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -44,7 +44,8 @@ INSERT INTO `category_list` (`id`, `name`, `description`) VALUES
 (4, 'Antibiotics', NULL),
 (5, 'Antiseptics', NULL),
 (6, 'Mood stabilizers', NULL),
-(7, 'CNS', NULL);
+(7, 'CNS', NULL),
+(13, 'Citapriobin', '');
 
 -- --------------------------------------------------------
 
@@ -66,7 +67,9 @@ CREATE TABLE `customer_list` (
 
 INSERT INTO `customer_list` (`id`, `name`, `contact`, `address`, `phone`) VALUES
 (1, 'Regular Customer', '01800000000', 'Walk-in Customer', NULL),
-(3, 'Shabbir Mahmud B', '2354880544543', 'etsertyewryy', '2354880544543');
+(3, 'Shabbir Mahmud B', '2354880544543', 'etsertyewryy', '2354880544543'),
+(4, 'Nasir uddin patwary', '017804458', 'Mirpur-2, panirtenki, Shialbari, Dhaka 1216', '017804458'),
+(6, 'Rokon Mahmud', '0166559900', 'East Monhampara,Dhaka 1207', '0166559900');
 
 -- --------------------------------------------------------
 
@@ -128,13 +131,15 @@ CREATE TABLE `product_list` (
 --
 
 INSERT INTO `product_list` (`id`, `category_id`, `type_id`, `sku`, `price`, `name`, `measurement`, `description`, `prescription`, `expiry_date`, `supplier_id`, `quantity`) VALUES
-(1, 4, 2, '32563070', 7, 'Amoxicillin 250', '250mg', 'Antibiotic capsule', 1, '2026-11-19', 2, 5),
-(2, 4, 2, '59118534', 10, 'Cephalexin 250', '250mg', 'Antibiotic capsule', 0, NULL, NULL, 0),
-(3, 3, 5, '90433847', 15, 'Napa Extra', '500mg', 'Paracetamol tablet', 0, NULL, NULL, 0),
+(2, 4, 2, '59118534', 10, 'Cephalexin 250', '250mg', 'Antibiotic capsule', 0, NULL, NULL, 8),
+(3, 3, 5, '90433847', 15, 'Napa Extra', '500mg', 'Paracetamol tablet', 0, NULL, NULL, 10),
 (5, 1, 5, '#234534ffdsg', 100, 'vitamin A', '500mg', 'vitamin er upor kono medicine nai', 0, NULL, NULL, 0),
-(6, 3, 5, 'fdsgvdsfgsdfs', 120, 'Fexo', '120', '', 0, NULL, NULL, 0),
+(6, 3, 5, 'fdsgvdsfgsdfs', 120, 'Fexo', '120', '', 0, NULL, NULL, 10),
 (7, 5, 1, 'fdshgsgfdh35', 200.01, 'Fenadine', '120', '', 0, '2026-11-17', 2, 6),
-(8, 1, NULL, '#234534ffdsgdfd', 50, 'Rocal D', '500mg', 'Vitamin D', 0, '2026-11-26', 1, 80);
+(8, 1, NULL, '#234534ffdsgdfd', 50, 'Rocal D', '500mg', 'Vitamin D', 0, '2026-11-26', 1, 80),
+(9, 3, NULL, 'ga-777', 250, 'Gaviscon', '500ml', 'Gastriside Medicine', 0, '2026-11-30', 2, 45),
+(10, 5, NULL, 'mx-2334', 7, 'Maxpro', '20', 'Gastriside Medicine', 0, '2026-11-18', 3, 1995),
+(11, 5, NULL, 'mx-23348', 8, 'Maxpro', '40', 'Gastriside', 0, '2026-11-26', 3, 1999);
 
 -- --------------------------------------------------------
 
@@ -150,6 +155,15 @@ CREATE TABLE `receiving_items` (
   `price` decimal(10,2) NOT NULL,
   `total` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `receiving_items`
+--
+
+INSERT INTO `receiving_items` (`id`, `receiving_id`, `product_id`, `qty`, `price`, `total`) VALUES
+(1, 7, 2, 20, 50.00, 1000.00),
+(2, 8, 3, 10, 5.00, 50.00),
+(3, 8, 6, 10, 8.00, 80.00);
 
 -- --------------------------------------------------------
 
@@ -170,12 +184,13 @@ CREATE TABLE `receiving_list` (
 --
 
 INSERT INTO `receiving_list` (`id`, `supplier_id`, `total_items`, `total_amount`, `date_created`) VALUES
-(1, 1, 4, 1999.96, '2026-11-14 12:02:18'),
 (2, 1, 4, 1999.96, '2026-11-14 12:02:20'),
 (3, 1, 4, 1999.96, '2026-11-14 12:02:58'),
 (4, 1, 4, 1999.96, '2026-11-14 12:03:00'),
 (5, 1, 4, 1999.96, '2026-11-14 12:05:54'),
-(6, 2, 5, 2220.00, '2026-11-14 12:06:35');
+(6, 2, 5, 2220.00, '2026-11-14 12:06:35'),
+(7, 3, 20, 1000.00, '2026-11-21 09:51:58'),
+(8, 3, 20, 130.00, '2026-11-21 09:52:30');
 
 -- --------------------------------------------------------
 
@@ -202,7 +217,12 @@ INSERT INTO `sales_list` (`id`, `ref_no`, `customer_id`, `total_amount`, `amount
 (1, 'REF-267011', 1, 14, 20, 6, '2026-11-14 12:50:05', '2026-11-14 12:50:05'),
 (2, 'REF-377751', 1, 14, 20, 6, '2026-11-14 12:50:34', '2026-11-14 12:50:34'),
 (3, 'REF-540931', 1, 2500, 3000, 500, '2026-11-15 12:34:30', '2026-11-15 12:34:30'),
-(4, 'REF-854789', 1, 200.01, 300, 99.99, '2026-11-15 12:48:51', '2026-11-15 12:48:51');
+(4, 'REF-854789', 1, 200.01, 300, 99.99, '2026-11-15 12:48:51', '2026-11-15 12:48:51'),
+(5, 'REF-938472', 4, 1250, 1500, 250, '2026-11-21 10:02:40', '2026-11-21 10:02:40'),
+(6, 'REF-644844', 4, 50, 600, 550, '2026-11-21 10:15:54', '2026-11-21 10:15:54'),
+(7, 'REF-477243', 1, 70, 100, 30, '2026-11-22 10:12:54', '2026-11-22 10:12:54'),
+(8, 'REF-841025', 1, 35, 40, 5, '2026-11-22 11:09:47', '2026-11-22 11:09:47'),
+(9, 'REF-105073', 4, 8, 10, 2, '2026-11-22 11:19:20', '2026-11-22 11:19:20');
 
 -- --------------------------------------------------------
 
@@ -227,7 +247,12 @@ INSERT INTO `sale_items` (`id`, `sale_id`, `product_id`, `price`, `qty`, `total`
 (1, 1, 1, 7.00, 2, 14.00),
 (2, 2, 1, 7.00, 2, 14.00),
 (3, 3, 7, 500.00, 5, 2500.00),
-(4, 4, 7, 200.01, 1, 200.01);
+(4, 4, 7, 200.01, 1, 200.01),
+(5, 5, 9, 250.00, 5, 1250.00),
+(6, 6, 2, 10.00, 5, 50.00),
+(7, 7, 2, 10.00, 7, 70.00),
+(8, 8, 10, 7.00, 5, 35.00),
+(9, 9, 11, 8.00, 1, 8.00);
 
 -- --------------------------------------------------------
 
@@ -251,7 +276,8 @@ CREATE TABLE `supplier_list` (
 INSERT INTO `supplier_list` (`id`, `supplier_name`, `contact_person`, `phone`, `email`, `address`) VALUES
 (1, 'Drug Internationals', 'Rahim Khan', '2354880544543', 'rahim@gmail.com', 'asf es dfdsgsdgrdsgdrfhbf'),
 (2, 'Incepta', 'Mahir Ahmed', '2354880544543', 'mahirrrrrrr@gmail.com', 'Narayangonj,Godnail,2208'),
-(3, 'Beximco Pharmacy', 'Tanvir Hasan', '0187439734574', 'ggg@gmail.com', 'Basundhara , Riverview. Dhaka 1212');
+(3, 'Beximco Pharmacy', 'Tanvir Hasan', '0187439734574', 'ggg@gmail.com', 'Basundhara , Riverview. Dhaka 1212'),
+(4, 'square Pharmacitical', 'Tanvir Hasan', '0166559900', 'tannu@gmail.com', 'Dhanmondi 32, Dhaka 1207');
 
 -- --------------------------------------------------------
 
@@ -297,7 +323,9 @@ INSERT INTO `type_list` (`id`, `name`, `description`) VALUES
 (3, 'Drops', NULL),
 (4, 'Inhalers', NULL),
 (5, 'Tablet', NULL),
-(7, 'Fluid', 'afvsdfgsaed');
+(7, 'Fluid', 'afvsdfgsaed'),
+(8, 'Gel', 'Gel fluid Based'),
+(9, 'Inhale', '');
 
 -- --------------------------------------------------------
 
@@ -321,7 +349,8 @@ INSERT INTO `users` (`id`, `name`, `username`, `password`, `type`) VALUES
 (1, 'Administrator', 'admin', 'admin123', 1),
 (2, 'Cashier User', 'cashier', 'cashier123', 2),
 (3, 'Staff User', 'staff', 'staff123', 3),
-(5, 'Mahir Ahmed', 'manager', '$2y$10$6WP3FjAs7SZxciD.OUC.reWtc7jkflVyv82OHDFTtGoJS8Wgmbd5m', 2);
+(5, 'Mahir Ahmed', 'manager', '$2y$10$zubIhHsPVzEFRf0QQNB58eEPcaf3Hn.vOykqDtZ2K8EsCDxg4Nd.m', 2),
+(7, 'cashier1', 'cashier1', '$2y$10$Ef9PhVc3PBWetWPY3ngP6ulyOtRs.Bpj5RxMYQlhwrpUvtFIthCyi', 2);
 
 --
 -- Indexes for dumped tables
@@ -413,13 +442,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `category_list`
 --
 ALTER TABLE `category_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `customer_list`
 --
 ALTER TABLE `customer_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `expired_product`
@@ -437,37 +466,37 @@ ALTER TABLE `inventory`
 -- AUTO_INCREMENT for table `product_list`
 --
 ALTER TABLE `product_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `receiving_items`
 --
 ALTER TABLE `receiving_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `receiving_list`
 --
 ALTER TABLE `receiving_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `sales_list`
 --
 ALTER TABLE `sales_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `sale_items`
 --
 ALTER TABLE `sale_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `supplier_list`
 --
 ALTER TABLE `supplier_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `system_settings`
@@ -479,13 +508,13 @@ ALTER TABLE `system_settings`
 -- AUTO_INCREMENT for table `type_list`
 --
 ALTER TABLE `type_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
