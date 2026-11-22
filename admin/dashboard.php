@@ -7,25 +7,38 @@ if (!isset($_SESSION['user_id'])) {
 
 include '../config/db_connect.php';
 
-// 1. Fetch Total Medicines Count
+// --- ADDED: Pure PHP GET Search for Inventory Medicines (No AJAX) ---
+$med_search = trim($_GET['med_search'] ?? '');
+$search_results = null;
+if ($med_search !== '') {
+    $safe_search = $conn->real_escape_string($med_search);
+    $sql_search = "SELECT p.*, c.name as category_name 
+                   FROM product_list p 
+                   LEFT JOIN category_list c ON p.category_id = c.id 
+                   WHERE p.name LIKE '%$safe_search%' 
+                   ORDER BY p.name ASC";
+    $search_results = $conn->query($sql_search);
+}
+// ------------------------------------------------------------------
+
 $med_res = $conn->query("SELECT COUNT(*) as count FROM product_list");
 $total_medicines = ($med_res) ? $med_res->fetch_assoc()['count'] : 0;
 
-// 2. Fetch Low Stock Count (Quantity <= 10)
+
 $low_res = $conn->query("SELECT COUNT(*) as count FROM product_list WHERE quantity <= 10");
 $low_stock = ($low_res) ? $low_res->fetch_assoc()['count'] : 0;
 
-// 3. Fetch Total Sales & Total Revenue
+
 $sales_res = $conn->query("SELECT COUNT(*) as total_sales, SUM(total_amount) as total_revenue FROM sales_list");
 $sales_data = ($sales_res) ? $sales_res->fetch_assoc() : ['total_sales' => 0, 'total_revenue' => 0];
 $total_sales = $sales_data['total_sales'] ?? 0;
 $total_revenue = $sales_data['total_revenue'] ?? 0;
 
-// 4. Fetch Total Customers Count
+
 $cust_res = $conn->query("SELECT COUNT(*) as count FROM customer_list");
 $total_customers = ($cust_res) ? $cust_res->fetch_assoc()['count'] : 0;
 
-// 5. Fetch Sales Data for Last 7 Days (For Bar Chart)
+
 $chart_labels = [];
 $chart_data = [];
 for ($i = 6; $i >= 0; $i--) {
@@ -40,10 +53,10 @@ for ($i = 6; $i >= 0; $i--) {
     $chart_data[] = floatval($total);
 }
 
-// 6. Fetch Recent 5 Medicines for Dashboard Overview
+
 $medicines_preview = $conn->query("SELECT p.*, c.name as category_name FROM product_list p LEFT JOIN category_list c ON p.category_id = c.id ORDER BY p.id DESC LIMIT 5");
 
-// 7. Fetch Recent 5 Sales Transactions
+
 $recent_sales = $conn->query("SELECT s.*, c.name as customer_name FROM sales_list s LEFT JOIN customer_list c ON s.customer_id = c.id ORDER BY s.id DESC LIMIT 5");
 ?>
 
@@ -70,6 +83,86 @@ $recent_sales = $conn->query("SELECT s.*, c.name as customer_name FROM sales_lis
                     <a href="add_medicine.php" class="btn btn-primary fw-bold"><i class="fa-solid fa-plus me-1"></i> Add Medicine</a>
                 </div>
             </div>
+
+            <!-- ADDED: Top Inventory Medicine Search Bar (PHP + Bootstrap, No AJAX) -->
+            <div class="card shadow-sm border-0 bg-white mb-4">
+                <div class="card-body">
+                    <form method="GET" action="dashboard.php" class="row g-2 align-items-center">
+                        <div class="col-md-9 col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white">
+                                    <i class="fa-solid fa-magnifying-glass text-primary"></i>
+                                </span>
+                                <input type="text"
+                                       name="med_search"
+                                       class="form-control"
+                                       placeholder="Search medicine in inventory by name..."
+                                       value="<?php echo htmlspecialchars($med_search); ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-4 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary fw-bold w-100">
+                                <i class="fa-solid fa-search me-1"></i> Search
+                            </button>
+                            <?php if ($med_search !== ''): ?>
+                                <a href="dashboard.php" class="btn btn-outline-secondary fw-bold">Reset</a>
+                            <?php endif; ?>
+                        </div>
+                    </form>
+
+                    <?php if ($med_search !== ''): ?>
+                        <div class="mt-3">
+                            <div class="small text-muted mb-2">
+                                Search results for <strong><?php echo htmlspecialchars($med_search); ?></strong>
+                                (<?php echo $search_results ? $search_results->num_rows : 0; ?> found)
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Category</th>
+                                            <th>Price</th>
+                                            <th>Stock</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if ($search_results && $search_results->num_rows > 0): ?>
+                                            <?php while ($med = $search_results->fetch_assoc()): 
+                                                $stock = intval($med['quantity'] ?? 0);
+                                            ?>
+                                                <tr>
+                                                    <td><strong><?php echo htmlspecialchars($med['name']); ?></strong></td>
+                                                    <td><?php echo htmlspecialchars($med['category_name'] ?? 'N/A'); ?></td>
+                                                    <td>৳ <?php echo number_format($med['price'], 2); ?></td>
+                                                    <td class="fw-bold"><?php echo $stock; ?></td>
+                                                    <td>
+                                                        <?php if ($stock > 10): ?>
+                                                            <span class="badge bg-success">In Stock</span>
+                                                        <?php elseif ($stock > 0 && $stock <= 10): ?>
+                                                            <span class="badge bg-warning text-dark">Low Stock</span>
+                                                        <?php else: ?>
+                                                            <span class="badge bg-danger">Out of Stock</span>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                </tr>
+                                            <?php endwhile; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="5" class="text-center text-muted py-3">
+                                                    No medicine found matching "<strong><?php echo htmlspecialchars($med_search); ?></strong>".
+                                                </td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <!-- ------------------------------------------------------------------ -->
 
             <!-- Analytics Cards Row -->
             <div class="row g-3 mb-4">

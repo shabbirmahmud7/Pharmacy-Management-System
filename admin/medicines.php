@@ -5,6 +5,10 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+if (!in_array(intval($_SESSION['user_type'] ?? 1), [1, 3])) {
+    header("Location: dashboard.php");
+    exit();
+}
 include '../config/db_connect.php';
 
 

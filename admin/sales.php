@@ -7,12 +7,12 @@ if (!isset($_SESSION['user_id'])) {
 
 include '../config/db_connect.php';
 
-// Capture filter parameters from GET request
+
 $filter = $_GET['filter'] ?? 'all';
 $start_date = $_GET['start_date'] ?? '';
 $end_date = $_GET['end_date'] ?? '';
 
-// Build SQL WHERE clause based on filter selection
+
 $where_sql = "1=1";
 $report_title = "All Time Sales History";
 
@@ -39,7 +39,7 @@ $sql = "SELECT s.*, c.name as customer_name, c.phone as customer_phone
 $result = $conn->query($sql);
 $total_sales_count = $result ? $result->num_rows : 0;
 
-// Calculate total revenue for the filtered result set
+
 $rev_sql = "SELECT SUM(s.total_amount) as total_rev FROM sales_list s WHERE $where_sql";
 $rev_res = $conn->query($rev_sql);
 $filtered_revenue = ($rev_res) ? $rev_res->fetch_assoc()['total_rev'] ?? 0 : 0;

@@ -5,13 +5,16 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+if (!in_array(intval($_SESSION['user_type'] ?? 1), [1, 2])) {
+    header("Location: dashboard.php");
+    exit();
+}
 include '../config/db_connect.php';
 
-// Handle Delete Receiving
 if (isset($_GET['delete_id'])) {
     $del_id = intval($_GET['delete_id']);
     
-    // Optional: revert stock if needed, or simply delete record and items
+
     $items = $conn->query("SELECT * FROM receiving_items WHERE receiving_id = $del_id");
     if ($items) {
         while ($item = $items->fetch_assoc()) {
@@ -29,7 +32,7 @@ if (isset($_GET['delete_id'])) {
     exit();
 }
 
-// Fetch all receivings with supplier names
+
 $sql = "SELECT r.*, s.supplier_name 
         FROM receiving_list r 
         LEFT JOIN supplier_list s ON r.supplier_id = s.id 

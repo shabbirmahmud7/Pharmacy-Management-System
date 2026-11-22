@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
 
 include '../config/db_connect.php';
 
-// Initialize Cart Session
+
 if (!isset($_SESSION['pos_cart'])) {
     $_SESSION['pos_cart'] = [];
 }
@@ -20,7 +20,6 @@ if (isset($_POST['add_to_cart'])) {
     $product_id = intval($_POST['product_id']);
     $qty = intval($_POST['qty']);
 
-    // Fetch product details & stock
     $prod_res = $conn->query("SELECT * FROM product_list WHERE id = $product_id");
     if ($prod_res && $prod_res->num_rows > 0) {
         $prod = $prod_res->fetch_assoc();

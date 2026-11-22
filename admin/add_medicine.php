@@ -10,15 +10,15 @@ include '../config/db_connect.php';
 $error = "";
 $success = "";
 
-// Fetch Categories for Dropdown
+
 $categories = $conn->query("SELECT * FROM category_list ORDER BY name ASC");
 
-// Fetch Suppliers for Dropdown
+
 $suppliers = $conn->query("SELECT * FROM supplier_list ORDER BY supplier_name ASC");
 
 // Handle Form Submission
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_medicine'])) {
-    // Safely retrieve POST data using null coalescing operator (??) to prevent warnings/deprecations
+
     $name = trim($_POST['name'] ?? '');
     $sku = trim($_POST['sku'] ?? '');
     $measurement = trim($_POST['measurement'] ?? '');
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_medicine'])) {
 
     if (!empty($name) && $price >= 0 && $quantity >= 0) {
         
-        // Insert medicine query including measurement and description safely
+     
         $sql = "INSERT INTO product_list (name, sku, measurement, description, category_id, supplier_id, price, quantity, expiry_date) 
                 VALUES ('$name', '$sku', '$measurement', '$description', '$category_id', '$supplier_id', '$price', '$quantity', '$expiry_date')";
         

@@ -5,16 +5,21 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+if (intval($_SESSION['user_type'] ?? 1) != 1) {
+    header("Location: dashboard.php");
+    exit();
+}
+
 include '../config/db_connect.php';
 
 $error = "";
 $success = "";
 
-// Fetch Suppliers and Medicines for form dropdowns
+
 $suppliers = $conn->query("SELECT * FROM supplier_list ORDER BY supplier_name ASC");
 $medicines = $conn->query("SELECT * FROM product_list ORDER BY name ASC");
 
-// Handle Form Submission
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_receiving'])) {
     $supplier_id = intval($_POST['supplier_id'] ?? 0);
     $product_ids = $_POST['product_id'] ?? [];
@@ -25,7 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_receiving'])) {
         $total_amount = 0;
         $total_items = 0;
 
-        // Calculate total amount and total items first
         for ($i = 0; $i < count($product_ids); $i++) {
             $q = intval($qtys[$i]);
             $p = floatval($prices[$i]);
@@ -35,12 +39,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_receiving'])) {
             }
         }
 
-        // Insert into receiving_list including total_items
+  
         $sql_rec = "INSERT INTO receiving_list (supplier_id, total_items, total_amount) VALUES ($supplier_id, $total_items, $total_amount)";
         if ($conn->query($sql_rec) === TRUE) {
             $receiving_id = $conn->insert_id;
 
-            // Insert items and update product quantity
+ 
             for ($i = 0; $i < count($product_ids); $i++) {
                 $p_id = intval($product_ids[$i]);
                 $q = intval($qtys[$i]);
@@ -48,10 +52,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_receiving'])) {
                 $total = $q * $p;
 
                 if ($p_id > 0 && $q > 0) {
-                    // Insert receiving item
+          
                     $conn->query("INSERT INTO receiving_items (receiving_id, product_id, qty, price, total) VALUES ($receiving_id, $p_id, $q, $p, $total)");
 
-                    // Update main product stock quantity
+              
                     $conn->query("UPDATE product_list SET quantity = quantity + $q WHERE id = $p_id");
                 }
             }
@@ -165,7 +169,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_receiving'])) {
     </div>
 </div>
 
-<!-- Simple JavaScript to Add/Remove Rows dynamically -->
 <script>
 document.getElementById('addRow').addEventListener('click', function() {
     let tbody = document.getElementById('itemRows');

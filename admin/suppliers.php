@@ -4,13 +4,16 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
-
+if (intval($_SESSION['user_type'] ?? 1) != 1) {
+    header("Location: dashboard.php");
+    exit();
+}
 include '../config/db_connect.php';
+
 
 $error = "";
 $success = "";
 
-// 1. Add New Supplier
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_supplier'])) {
     $supplier_name = $conn->real_escape_string(trim($_POST['supplier_name'] ?? ''));
     $contact_person = $conn->real_escape_string(trim($_POST['contact_person'] ?? ''));
@@ -32,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_supplier'])) {
     }
 }
 
-// 2. Update Supplier Info
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_supplier'])) {
     $id = intval($_POST['supplier_id'] ?? 0);
     $supplier_name = $conn->real_escape_string(trim($_POST['supplier_name'] ?? ''));
@@ -60,7 +63,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_supplier'])) {
     }
 }
 
-// 3. Delete Supplier
 if (isset($_GET['delete_id'])) {
     $del_id = intval($_GET['delete_id']);
     if ($del_id > 0) {
@@ -69,7 +71,7 @@ if (isset($_GET['delete_id'])) {
     }
 }
 
-// Fetch All Suppliers
+
 $suppliers = $conn->query("SELECT * FROM supplier_list ORDER BY id DESC");
 ?>
 

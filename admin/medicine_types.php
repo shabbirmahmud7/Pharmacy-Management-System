@@ -5,12 +5,17 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+if (!in_array(intval($_SESSION['user_type'] ?? 1), [1, 3])) {
+    header("Location: dashboard.php");
+    exit();
+}
+
 include '../config/db_connect.php';
 
 $error = "";
 $success = "";
 
-// Add Medicine Type Logic
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_type'])) {
     $name = trim($_POST['name']);
     $description = trim($_POST['description']);
@@ -27,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_type'])) {
     }
 }
 
-// Fetch Medicine Types
+
 $result = $conn->query("SELECT * FROM type_list ORDER BY id DESC");
 ?>
 

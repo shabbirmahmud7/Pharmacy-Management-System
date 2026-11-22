@@ -4,7 +4,7 @@ include '../config/db_connect.php';
 
 $error = "";
 
-// Handle Login Form Submission
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $username = trim($_POST['username'] ?? '');
     $password = trim($_POST['password'] ?? '');
@@ -18,10 +18,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         if ($result && $result->num_rows == 1) {
             $user = $result->fetch_assoc();
             
-            // Check password (supports both hashed password and plain text)
+
             if (password_verify($password, $user['password']) || $password === $user['password']) {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
+                $_SESSION['user_type'] = !empty($user['type']) ? intval($user['type']) : 1;
                 header("Location: dashboard.php");
                 exit();
             } else {
